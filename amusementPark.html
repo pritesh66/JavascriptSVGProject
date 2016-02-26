@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8' />
+    <title>Amusement Park </title>
+
+</head>
+<body onload="onLoad();" id="body">
+
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg  version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1380 800" style="enable-background:new 0 0 1380 800;" xml:space="preserve">
+
+<style type="text/css">
+	.st0{fill:black;stroke:#000000;stroke-miterlimit:10;}
+    #giantCircle{fill:#99FFFF;stroke:#000000;stroke-miterlimit:10;}
+    .giantLine{fill:none;stroke:#000000;stroke-miterlimit:10;}
+    .seatCircle{fill:#E8E8E8 ;stroke:#000000;stroke-miterlimit:10;}
+
+    #st1{
+        fill:#F7941E;
+        
+        stroke:#000000;
+        stroke-miterlimit:10;
+    }
+
+    #rollerCoaster{fill: none;stroke:#000000; stroke-width: 2px; }
+    #giantStand{fill: green;}
+    #columbus{fill: #330000}
+    .coasterStand{fill:black}
+    #roller{fill: green}
+    #innerStand{fill: #99CC66}
+    #giantInnerCircle{fill:#686868 ;}
+    #tyre {fill: brown;}
+    #header{fill: red;font-size:30px;}
+
+
+    #giantWheelText, #columbusText, #rollerText{
+
+        font-size: 20px;
+        margin-top: 10px;
+        cursor: pointer;
+    }
+
+
+    .giantLine{
+        transform-origin: 50% 50%;
+        -webkit-animation: clockwiseSpin 5s 3 linear;
+        animation: clockwiseSpin 5s infinite linear;
+
+
+    }
+
+
+
+
+    .seatCircle{
+        transform-origin: 180.2px 271.5px;
+        -webkit-animation: clockwiseSpin 5s 2 linear;
+        animation: clockwiseSpin 5s infinite linear;
+
+    }
+
+
+    @keyframes clockwiseSpin {
+        0%  {transform: rotate(0deg);}
+        100% {transform: rotate(360deg);}
+    }
+
+    audio{
+        display: none;
+    }
+
+
+
+    body {
+
+        background:  linear-gradient(270deg,#33CCFF 0%, #CCFFFF 25%,#CCFFFF 35%, #CCFFFF 50%, #99FFFF 75%, #33CCFF 100%);
+
+
+    }
+
+</style>
+
+</svg>
+
+
+<script>
+
+    var count= "0",temp,flag,animationColumbus,animationStand;
+    var svgns = "http://www.w3.org/2000/svg";
+    var soundGiant,soundColumbus,giantFlag= 0,columbusFlag=0;
+
+    /*---------------------------- Function executes onload ------------------------- */
+
+    function onLoad() {
+
+
+        var sound = document.createElement("audio");
+        sound.setAttribute("id","coasterSound");
+        sound.setAttribute("src","rollerCoaster.mp3");
+        document.body.appendChild(sound);
+
+        sound = document.createElement("audio");
+        sound.setAttribute("id","giantSound");
+        sound.setAttribute("src","giantWheel.mp3");
+        sound.loop = true;
+        document.body.appendChild(sound);
+
+        sound = document.createElement("audio");
+        sound.setAttribute("id","columbusSound");
+        sound.setAttribute("src","columbusSound.mp3");
+        sound.loop = true;
+        document.body.appendChild(sound);
+
+
+        createImage();
+
+        createText("header","600","20","Amusement Park");
+        createText("giantWheelText","300","450","Giant wheel");
+        createText("columbusText","580","550","Columbus");
+        createText("rollerText","1000","400","Roller Coaster");
+
+
+        var wheel;
+        wheel = document.getElementById("giantWheelText");
+        wheel.addEventListener("click", animateGiantWheel);
+        var columbus;
+        columbus = document.getElementById("columbusText");
+        columbus.addEventListener("click", animateColumbusRide);
+
+        var coaster;
+        coaster = document.getElementById("rollerText");
+        coaster.addEventListener("click", animateCoaster);
+
+
+        var path = ["M6.9,385.5c98.5,35,197.1,69.9,295.6,104.9c85.1,30.2,170.2,60.4,256.5,86.7c230.4,70.3,471.6,113.1,712.1,98c25.2-" +
+        "1.6,50.8-3.8,75.5,1.6c24.7,5.4,48.8,19.7,59.3,42.7c14.3,31.6-1.8,70.5-28.8,92.2c-27,21.7-62.3,29.8-96.5,35.5c-126,20.9-254.7," +
+        "16.8-382.4,12.6c-237.7-7.9-475.5-15.7-713.2-23.6c-70.8-2.3-144.5-5.4-206.7-39.2c-11.3-130.8-9.9-262.8,4.2-393.4","M1394.8,405.1" +
+        "c-34.1,0.3-68.2,0.6-102.3,0.8c-6.6,30.3-16.8,61.4-29.1,88.9c-20.3,45.2-49.2,86.7-87.7,107.1c-23.4,12.4-51.5,8.3-75.8-0.9c-24.3-9.2-" +
+        "46.5-29-58.5-56.7c-12-27.7-12.8-63.2,0.4-90c13.3-26.8,41.2-42.3,65.6-33.6c13.4,4.8,24.9,16,33.4,29.6c23.5,37.9,22.7,94.9,0,133.5" +
+        "s-64.9,57.1-102.8,47.8c-37.9-9.3-70.4-44.6-84.9-88.9c-21.9-0.7-44.8,0.5-66.7-0.2c-10.5,0.4-20.9,0.2-31.4,0.6","M179.2,271.3c-19,80.7-38," +
+        "161.5-57,242.2c40.4-0.1,80.9-0.1,121.3-0.2c-21.1-79.3-42.1-158.7-63.2-238","M350,652.2c107.2-2.1," +
+        "214.4-4.2,321.6-6.4c-30.5,39.6-75.1,68-123.8,79c-48.7,11-101.2,4.4-145.7-18.3c-22.6-11.5-44.3-28.5-52.8-52.4"];
+
+        createElementPath("0","st1",path[0]);
+        createElementPath("0","rollerCoaster",path[1]);
+        createElementPath("0","giantStand",path[2]);
+
+        createElementRect("st0","0","504.9","316","394.3","12.1");
+        createElementRect("coasterStand","0","855.1","543.1","210.4","19.5");
+        createElementRect("coasterStand","0","1120.9","607.4","151.1","8.2");
+        createElementRect("coasterStand","0","1366.7","405.1","351.9","8.9");
+        createElementRect("0","roller","-22","-22","17.8","44.1");
+        createElementRect("0","innerStand","506.2","316","370","9.5");
+
+
+        createElementPath("0","columbus",path[3]);
+
+        createElementEllipse("0","giantInnerCircle","180.2","271.5","118.4","112.8");
+        createElementEllipse("0","giantCircle","181.8","271","95.1","92.9");
+
+
+
+        createElementLine("giantLine","0","35.5","271","324","271");
+        createElementLine("giantLine","0","252.5","154.6","108.1","388");
+        createElementLine("giantLine","0","304.7","203.6","54.7","338.4");
+        createElementLine("giantLine","0","106.9","154.6","252.5","388");
+        createElementLine("giantLine","0","54.7","203.6","304.7","338.4");
+        createElementLine("giantLine","0","179.7","136.2","180.2","405.8");
+
+        createElementEllipse("seatCircle","0","43","204.6","13.2","10.7");
+        createElementEllipse("seatCircle","0","22.2","269.7","13.2","10.7");
+        createElementEllipse("seatCircle","0","43","343.1","13.2","10.7");
+        createElementEllipse("seatCircle","0","99.9","395.1","13.2","10.7");
+        createElementEllipse("seatCircle","0","180.2","416.5","13.2","10.7");
+        createElementEllipse("seatCircle","0","257.4","398.8","13.2","10.7");
+        createElementEllipse("seatCircle","0","317.9","343.1","13.2","10.7");
+        createElementEllipse("seatCircle","0","337.2","269.7","13.2","10.7");
+        createElementEllipse("seatCircle","0","317.9","200","13.2","10.7");
+        createElementEllipse("seatCircle","0","257.4","143.9","13.2","10.7");
+        createElementEllipse("seatCircle","0","179.7","125.5","13.2","10.7");
+        createElementEllipse("seatCircle","0","99.9","146.9","13.2","10.7");
+
+        createElementEllipse("0","tyre","0","0","4.8","6.2");
+
+        var giant;
+        giant = document.getElementById("giantInnerCircle");
+        giant.addEventListener("click", pauseGiantWheel);
+
+        var giantCircle;
+        giantCircle = document.getElementById("giantCircle");
+        giantCircle.addEventListener("click", pauseGiantWheel);
+
+        var columbusPause;
+        columbusPause = document.getElementById("columbus");
+        columbusPause.addEventListener("click", pauseColumbus);
+
+        pauseGiantWheel();
+
+
+
+
+        var people = document.getElementsByClassName("columbusPeople");
+        for (i = 0; i < people.length; i++) {
+            people[i].style.animationPlayState = "paused";
+        }
+
+    }
+
+
+    function createImage(){
+
+        var person = document.createElementNS(svgns,"image");
+        person.setAttribute("id","person");
+        person.setAttributeNS('http://www.w3.org/1999/xlink',"xlink:href","download.jpeg");
+        person.setAttribute("x","640");
+        person.setAttribute("y","70");
+        person.setAttribute("height","150");
+        person.setAttribute("width","150");
+       // console.log(person);
+        document.getElementsByTagName("svg")[0].appendChild(person);
+    }
+
+
+    /*---------------------------- Function to create text element ------------------------- */
+
+    function createText(id,x,y,value){
+
+        var text = document.createElementNS(svgns,"text");
+        text.setAttribute("id",id);
+        text.setAttribute("x",x);
+        text.setAttribute("y",y);
+        var textContent = document.createTextNode(value);
+        text.appendChild(textContent);
+        document.getElementsByTagName("svg")[0].appendChild(text);
+
+    }
+
+
+    var element=[];
+    var i;
+
+
+    /*---------------------------- Function to create path element ------------------------- */
+
+    function createElementPath(eleClass,id,path){
+
+        var pathCreate = document.createElementNS(svgns, "path");
+
+        if(eleClass=="0") {
+            pathCreate.setAttribute("id", id);
+        }else{
+            pathCreate.setAttribute("class", eleClass);
+        }
+        pathCreate.setAttribute("d",path);
+        document.getElementsByTagName("svg")[0].appendChild(pathCreate);
+
+
+
+    }
+
+    /*---------------------------- Function to create rect element ------------------------- */
+
+    function createElementRect(eleClass,id,x,y,ht,wt){
+
+        var rectCreate = document.createElementNS(svgns, "rect");
+
+        if(eleClass=="0") {
+            rectCreate.setAttribute("id", id);
+        }else{
+            rectCreate.setAttribute("class", eleClass);
+        }
+
+        rectCreate.setAttribute("x",x);
+        rectCreate.setAttribute("y",y);
+        rectCreate.setAttribute("height",ht);
+        rectCreate.setAttribute("width",wt);
+
+        document.getElementsByTagName("svg")[0].appendChild(rectCreate);
+
+
+    }
+
+    /*---------------------------- Function to create ellipse element ------------------------- */
+
+    function createElementEllipse(eleClass,id,cx,cy,rx,ry){
+
+        var ellipseCreate = document.createElementNS(svgns, "ellipse");
+
+        if(eleClass=="0") {
+            ellipseCreate.setAttribute("id", id);
+        }else{
+            ellipseCreate.setAttribute("class", eleClass);
+        }
+
+        ellipseCreate.setAttribute("cx",cx);
+        ellipseCreate.setAttribute("cy",cy);
+        ellipseCreate.setAttribute("rx",rx);
+        ellipseCreate.setAttribute("ry",ry);
+
+        document.getElementsByTagName("svg")[0].appendChild(ellipseCreate);
+
+    }
+
+    /*---------------------------- Function to create line element ------------------------- */
+
+    function createElementLine(eleClass,id,x1,y1,x2,y2){
+
+        var lineCreate = document.createElementNS(svgns, "line");
+
+        if(eleClass=="0") {
+            lineCreate.setAttribute("id", id);
+        }else{
+            lineCreate.setAttribute("class", eleClass);
+        }
+
+        lineCreate.setAttribute("x1",x1);
+        lineCreate.setAttribute("y1",y1);
+        lineCreate.setAttribute("x2",x2);
+        lineCreate.setAttribute("y2",y2);
+
+        document.getElementsByTagName("svg")[0].appendChild(lineCreate);
+
+    }
+
+
+
+    /*---------------------------- Function to animate person for   Columbus ------------------------- */
+
+    function animateColumbusRide(){
+
+        pauseGiantWheel();
+
+
+
+        if(giantFlag == 1) {
+            soundGiant.pause();
+            soundGiant.currentTime = 0;
+            giantFlag=0;
+        }
+
+        columbusFlag = 1;
+        //console.log(count);
+
+
+        var image = document.getElementById("person");
+        image.style.display = "block";
+
+        var ani = document.createElementNS(svgns, "animateMotion");
+
+        ani.setAttribute("id", "motion1");
+        ani.setAttribute("dur", "4s");
+        ani.setAttribute("path", "M-10.8,-10.7c-33.2,90-80.5,174.9-139.6,250.5");
+        ani.setAttribute("repeatCount", "1");
+
+        var time = document.getElementsByTagName("svg")[0].getCurrentTime();
+        ani.setAttribute("begin",+time+"s");
+        ani.setAttribute("fill","freeze");
+       // console.log(image);
+       //
+       //console.log(ani);
+
+        flag= parseInt(count) + 1;
+        count = flag.toString();
+
+        image.appendChild(ani);
+        animateColumbus();
+    }
+
+    /*---------------------------- Function to animate columbus ------------------------- */
+
+    function animateColumbus(){
+
+        setTimeout(function(){
+
+            soundColumbus = document.getElementById("columbusSound");
+            soundColumbus.play();
+            deleteImage();
+        document.getElementById("innerStand").style.transformOrigin = "510.2px 316px";
+
+
+        animationStand = document.querySelector("#innerStand").animate(
+                [
+                    { transform:'rotate(-30deg)', offset:0},
+                    { transform:'rotate(30deg)',offset:0.5},
+                    { transform:'rotate(-30deg)',offset:1}
+
+
+                ],{
+
+                    duration:2000,
+                    iterations:Infinity
+                    
+                });
+
+
+
+
+        document.getElementById("columbus").style.transformOrigin = "50% 0";
+        animationColumbus = document.querySelector("#columbus").animate(
+                [
+                    { transform:'rotate(-15deg)', offset:0},
+                    { transform:'rotate(15deg)',offset:0.5},
+                    { transform:'rotate(-15deg)',offset:1}
+
+
+                ],{
+                    duration:2000,
+                    iterations:Infinity
+
+                });
+
+
+        }, 5000);
+    }
+
+
+    /*---------------------------- Function to animate person for roller coaster ------------------------- */
+
+    function animateCoaster(){
+
+
+        if(count!="0"){
+            deleteImage();
+
+        }
+
+        if(giantFlag == 1) {
+            soundGiant.pause();
+            soundGiant.currentTime = 0;
+            giantFlag=0;
+        }
+
+        if(columbusFlag == 1) {
+            soundColumbus.pause();
+            soundColumbus.currentTime = 0;
+            columbusFlag=0;
+        }
+
+        var image = document.getElementById("person");
+        var ani = document.createElementNS(svgns, "animateMotion");
+
+        ani.setAttribute("id", "motion");
+        ani.setAttribute("dur", "4s");
+        ani.setAttribute("path", "M174.4,0.6c34,6.5,64.7,24.4,93.6,43.4c32.7,21.5,64.2,44.8,95.5,68.2c20,14.9,39.9,29.9,59.7,45c53.7,40.7,108.7,84,139,124.2");
+        ani.setAttribute("repeatCount", "1");
+
+        var time = document.getElementsByTagName("svg")[0].getCurrentTime();
+        ani.setAttribute("begin",+time+"s");
+        ani.setAttribute("fill","freeze");
+       // console.log(image);
+       // console.log(ani);
+
+        flag= parseInt(count) + 1;
+        count = flag.toString();
+
+        image.appendChild(ani);
+        animateRollerCoaster();
+
+    }
+
+
+
+    /*---------------------------- Function to animate roller coaster ------------------------- */
+
+    function animateRollerCoaster() {
+
+        pauseColumbus();
+        pauseGiantWheel();
+
+        setTimeout(function(){
+            deleteImage();
+
+            var sound = document.getElementById("coasterSound");
+            sound.play();
+
+        var tyre = document.getElementById("tyre");
+        var roller = document.getElementById("roller");
+        var ani = document.createElementNS(svgns, "animateMotion");
+        ani.setAttribute("dur", "8s");
+        ani.setAttribute("path", "M1394.8,405.1c-34.1,0.3-68.2,0.6-102.3,0.8c-6.6,30.3-16.8,61.4-29.1,88.9c-20.3,45.2-49.2,86.7-87.7" +
+        ",107.1c-23.4,12.4-51.5,8.3-75.8-0.9c-24.3-9.2-46.5-29-58.5-56.7c-12-27.7-12.8-63.2,0.4-90c13.3-26.8,41.2-42.3,65.6-33.6c13.4" +
+        ",4.8,24.9,16,33.4,29.6c23.5,37.9,22.7,94.9,0,133.5s-64.9,57.1-102.8,47.8c-37.9-9.3-70.4-44.6-84.9-88.9c-21.9-0.7-44.8,0.5-66.7-0.2" +
+        "c-10.5,0.4-20.9,0.2-31.4,0.6");
+        ani.setAttribute("repeatCount", "1");
+        var time = document.getElementsByTagName("svg")[0].getCurrentTime();
+        ani.setAttribute("begin",+time+"s");
+        roller.appendChild(ani);
+
+        ani = document.createElementNS(svgns, "animateMotion");
+        ani.setAttribute("dur", "8s");
+        ani.setAttribute("path", "M1394.8,405.1c-34.1,0.3-68.2,0.6-102.3,0.8c-6.6,30.3-16.8,61.4-29.1,88.9c-20.3,45.2-49.2,86.7-87.7,107.1" +
+        "c-23.4,12.4-51.5,8.3-75.8-0.9c-24.3-9.2-46.5-29-58.5-56.7c-12-27.7-12.8-63.2,0.4-90c13.3-26.8,41.2-42.3,65.6-33.6c13.4,4.8,24.9," +
+        "16,33.4,29.6c23.5,37.9,22.7,94.9,0,133.5s-64.9,57.1-102.8,47.8c-37.9-9.3-70.4-44.6-84.9-88.9c-21.9-0.7-44.8,0.5-66.7-0.2" +
+        "c-10.5,0.4-20.9,0.2-31.4,0.6");
+        ani.setAttribute("repeatCount", "1");
+        time = document.getElementsByTagName("svg")[0].getCurrentTime();
+        ani.setAttribute("begin",+time+"s");
+        tyre.appendChild(ani);
+
+        }, 5000);
+
+
+
+    }
+
+
+
+    /*---------------------------- Function to animate person for  giant wheel ------------------------- */
+
+
+    function animateGiantWheel() {
+
+        pauseColumbus();
+
+        giantFlag = 1;
+
+        if(count!="0"){
+            deleteImage();
+
+        }
+
+        if(columbusFlag == 1) {
+            soundColumbus.pause();
+            soundColumbus.currentTime = 0;
+            columbusFlag=0;
+        }
+
+        var image = document.getElementById("person");
+        var ani = document.createElementNS(svgns, "animateMotion");
+        image.style.display = "block";
+
+        ani.setAttribute("id", "motion");
+        ani.setAttribute("dur", "4s");
+        ani.setAttribute("path", "M-180.8,-10.7c-33.2,90-80.5,174.9-139.6,250.5");
+        ani.setAttribute("repeatCount", "1");
+
+        var time = document.getElementsByTagName("svg")[0].getCurrentTime();
+        ani.setAttribute("begin",+time+"s");
+        ani.setAttribute("fill","freeze");
+       // console.log(image);
+       // console.log(ani);
+
+        flag= parseInt(count) + 1;
+        count = flag.toString();
+
+        image.appendChild(ani);
+
+        animateGw();
+    }
+
+
+
+    /*----------------- Function to animate giant wheel -------------------- */
+
+    function animateGw()
+    {
+        setTimeout(function(){
+
+            deleteImage();
+
+            soundGiant = document.getElementById("giantSound");
+            soundGiant.play();
+
+            var seat = document.getElementsByClassName("seatCircle");
+        var i;
+        for (i = 0; i < seat.length; i++) {
+            seat[i].style.animationPlayState = "running";
+        }
+        var lines = document.getElementsByClassName("giantLine");
+        for (i = 0; i < lines.length; i++) {
+            lines[i].style.animationPlayState = "running";
+        }
+        }, 5000);
+
+
+
+
+    }
+
+    /*----------------- Function to pause giant wheel animation -------------------- */
+
+    function pauseGiantWheel(){
+
+        if(giantFlag == 1) {
+            soundGiant.pause();
+            soundGiant.currentTime = 0;
+            giantFlag=0;
+        }
+
+        var seat = document.getElementsByClassName("seatCircle");
+        var i;
+        for (i = 0; i < seat.length; i++) {
+            seat[i].style.animationPlayState = "paused";
+        }
+        var lines = document.getElementsByClassName("giantLine");
+        for (i = 0; i < lines.length; i++) {
+            lines[i].style.animationPlayState = "paused";
+        }
+    }
+
+    /*----------------- Function to pause giant columbus animation -------------------- */
+
+    function pauseColumbus(){
+
+        if(columbusFlag == 1) {
+            soundColumbus.pause();
+            soundColumbus.currentTime = 0;
+            columbusFlag=0;
+        }
+
+        animationColumbus = document.querySelector("#columbus").animate(
+                [
+                    { transform:'rotate(0deg)', offset:0},
+                    { transform:'rotate(0deg)',offset:0.5},
+                    { transform:'rotate(0deg)',offset:1}
+
+                ],{
+                    duration:2000,
+                    iterations:1
+
+                });
+
+        animationStand = document.querySelector("#innerStand").animate(
+                [
+                    { transform:'rotate(0deg)', offset:0},
+                    { transform:'rotate(0deg)',offset:0.5},
+                    { transform:'rotate(0deg)',offset:1}
+
+                ],{
+                    duration:2000,
+                    iterations:Infinity
+
+                });
+
+        animationColumbus.pause();
+        animationStand.pause();
+    }
+
+    function deleteImage(){
+
+
+        var myNode = document.getElementById("person");
+        while (myNode.firstChild) {
+            myNode.removeChild(myNode.firstChild);
+        }
+    }
+
+
+
+</script>
+
+</body>
+</html>
